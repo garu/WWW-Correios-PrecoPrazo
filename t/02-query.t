@@ -6,7 +6,7 @@ use warnings;
 
 package HTTP::Response::Mock;
 sub new     { bless {}, 'HTTP::Response::Mock' }
-sub content { '<?xml><Foo>42</Foo></xml>'      }
+sub content { '<?xml><cServico><Foo>42</Foo></cServico></xml>' }
 
 package LWP::Mock;
 sub new { bless {}, 'LWP::Mock' }
@@ -21,25 +21,25 @@ ok my $cpp = WWW::Correios::PrecoPrazo->new( { user_agent => LWP::Mock->new } ),
 
 is_deeply(
     $cpp->query,
-    {},
+    { response => undef },
     'Query vazia'
 );
 
 is_deeply(
     $cpp->query( formato => 'caixa' ),
-    {},
+    { response => undef },
     'Query recebendo Hash'
 );
 
 is_deeply(
     $cpp->query( { formato => 'caixa' } ),
-    {},
+    { response => undef },
     'Query recebendo HashRef'
 );
 
 is_deeply(
     $cpp->query( { formato => 'Batata Baroa' } ),
-    {},
+    { response => undef },
     'Formato inválido'
 );
 

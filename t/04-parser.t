@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 12;
 use WWW::Correios::PrecoPrazo;
 
 package HTTPResponseMock;
@@ -20,11 +20,13 @@ my $mock = HTTPResponseMock->new;
 
 my $data = WWW::Correios::PrecoPrazo::_parse_response( $mock );
 
+$data = $data->[0];
+
 is_deeply(
     [ sort keys %$data ],
     [ qw( Codigo EntregaDomiciliar EntregaSabado Erro MsgErro PrazoEntrega
           Valor ValorAvisoRecebimento ValorMaoPropria ValorSemAdicionais
-          ValorValorDeclarado response )
+          ValorValorDeclarado )
     ],
     'resposta tem as chaves corretas'
 );
@@ -44,6 +46,5 @@ is $data->{ValorAvisoRecebimento}, '5,43', 'valor aviso recebimento';
 is $data->{ValorMaoPropria}, '0,20', 'valor mao propria';
 is $data->{ValorSemAdicionais}, '0,03', 'valor sem adicionais';
 is $data->{ValorValorDeclarado}, '1,00', 'valor declarado';
-is ref $data->{response}, 'HTTPResponseMock', 'response';
 
 

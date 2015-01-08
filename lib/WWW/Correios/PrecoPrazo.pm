@@ -87,11 +87,23 @@ sub new {
     return bless $atts, $class;
 }
 
+sub query_multi {
+    my ($res, $parsed_response) = _query(@_);
+    return $parsed_response;
+}
+
 sub query {
+    my ($res, $parsed_response) = _query(@_);
+    return { %{$parsed_response->[0]}, response => $res };
+}
+
+sub _query {
     my $self = shift;
     my $args = ref $_[0] ? $_[0] : {@_};
 
-    return {} unless scalar(grep exists $args->{$_}, @REQUIRED) == @REQUIRED;
+    return (undef, [{}])
+        unless scalar(grep exists $args->{$_}, @REQUIRED) == @REQUIRED;
+
     $args->{cep_origem}  =~ s/-//;
     $args->{cep_destino} =~ s/-//;
 
@@ -105,25 +117,35 @@ sub query {
     my $uri = $self->{base_uri}->clone;
     $uri->query_form($params);
 
-    return _parse_response($self->{user_agent}->get( uri_unescape( $uri->as_string ) ));
+    my $res = $self->{user_agent}->get( uri_unescape( $uri->as_string ) );
+    my $parsed_response = _parse_response($res);
+
+    return ($res, $parsed_response);
 }
 
 sub _parse_response {
     my ($res) = @_;
-    my %data  = ( response => $res );
 
+    my @parsed_response;
+    my $i = 0;
     if (my $content = $res->content) {
         if (substr($content, 0, 5) eq '<?xml') {
-            $data{$1} = $2 while $content =~ m{<([^<]+)>([^<]*)</\1>}gs;
-            if (
-              exists $data{Erro}
-              && $content =~ m{<MsgErro>(?:(?:<!\[CDATA\[)?(.+?)(?:\]\]\>)?)??</MsgErro>}
-            ) {
-                $data{MsgErro} = $1;
+            while ($content =~ m{<cServico>(.+?)</cServico>}gs) {
+                my $inner_content = $1;
+                my %data;
+                $data{$1} = $2 while $inner_content =~ m{<([^<]+)>([^<]*)</\1>}gs;
+                if (
+                    exists $data{Erro}
+                    && $inner_content =~ m{<MsgErro>(?:(?:<!\[CDATA\[)?(.+?)(?:\]\]\>)?)??</MsgErro>}
+                ) {
+                    $data{MsgErro} = $1;
+                }
+                push @parsed_response, \%data;
+                $i++;
             }
         }
     }
-    return \%data;
+    return \@parsed_response;
 }
 
 sub _init_user_agent {
@@ -417,6 +439,29 @@ O valor padrão é I<'0'>, indicando que o serviço não será utilizado.
 
 =back
 
+=head2 query_multi( %parametros )
+
+Recebe os mesmos parametros do C<query()>, mas retorna um arrayref com
+a lista de respostas dos Correios. Utilize esse método para fazer consulta
+de preços e prazos a mais de um serviço simultaneamente, por exemplo:
+
+    my $res = $correios->query_multi(
+        codigo_servico => '41106,81019',  # <-- consultando 2 serviços!
+        codigo_empresa => '...',
+        senha          => '...',
+        cep_origem     => '20021-140',
+        cep_destino    => '01310-200',
+        peso           => 0.1,
+        formato        => 'prisma',
+        diametro       => 11,
+        comprimento    => 16,
+    );
+
+    foreach my $servico (@$res) {
+        say $servico->{Valor};
+    }
+
+Nota: este método não retorna a resposta original do servidor dos Correios.
 
 =head1 CONFIGURAÇÃO E VARIÁVEIS DE AMBIENTE
 
