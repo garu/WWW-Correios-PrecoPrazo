@@ -117,7 +117,7 @@ sub _parse_response {
             $data{$1} = $2 while $content =~ m{<([^<]+)>([^<]*)</\1>}gs;
             if (
               exists $data{Erro}
-              && $content =~ m{<MsgErro>(?:<!\[CDATA\[)?(.+?)(?:\]\]\>)?</MsgErro>}
+              && $content =~ m{<MsgErro>(?:(?:<!\[CDATA\[)?(.+?)(?:\]\]\>)?)??</MsgErro>}
             ) {
                 $data{MsgErro} = $1;
             }
