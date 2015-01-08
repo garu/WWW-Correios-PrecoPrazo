@@ -1,7 +1,7 @@
 WWW-Correios-PrecoPrazo
 =======================
 
-[![Build status](https://api.travis-ci.org/garu/WWW-Correios-PrecoPrazo.png)](https://api.travis-ci.org/garu/WWW-Correios-PrecoPrazo.png)
+[![Build status](https://api.travis-ci.org/garu/WWW-Correios-PrecoPrazo.png)](https://travis-ci.org/garu/WWW-Correios-PrecoPrazo)
 [![Coverage Status](https://coveralls.io/repos/garu/WWW-Correios-PrecoPrazo/badge.png)](https://coveralls.io/r/garu/WWW-Correios-PrecoPrazo)
 [![CPAN version](https://badge.fury.io/pl/WWW-Correios-PrecoPrazo.png)](http://badge.fury.io/pl/WWW-Correios-PrecoPrazo)
 
