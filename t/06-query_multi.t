@@ -61,7 +61,7 @@ is ref $res, 'ARRAY', 'query multi retornou arrayref';
 is $res->[0]{Codigo}, '81019', 'query multi parser (0)';
 is $res->[1]{Codigo}, '41106', 'query multi parser (1)';
 
-ok my $res = $cpp->query_multi( \%query ), 'query multi retornou (hashref)';
+ok $res = $cpp->query_multi( \%query ), 'query multi retornou (hashref)';
 is ref $res, 'ARRAY', 'query multi retornou arrayref (hashref)';
 is $res->[0]{Codigo}, '81019', 'query multi parser (0) (hashref)';
 is $res->[1]{Codigo}, '41106', 'query multi parser (1) (hashref)';
