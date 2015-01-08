@@ -490,7 +490,7 @@ Blabos de Blebe  C<< <blabos@cpan.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2011-2014, Breno G. de Oliveira, Blabos de Blebe.
+Copyright (c) 2011-2015, Breno G. de Oliveira, Blabos de Blebe.
 All rights reserved.
 
 This module is free software; you can redistribute it and/or
