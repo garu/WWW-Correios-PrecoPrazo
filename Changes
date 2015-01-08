@@ -1,5 +1,10 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.32    2015-01-08
+            - NEW METHOD: query_multi()
+            - Improved error message parsing
+            - More tests
+
 0.31    2014-10-28
             - Improved parsing
             - include error message when there's an error

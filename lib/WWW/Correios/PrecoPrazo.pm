@@ -7,7 +7,7 @@ use Const::Fast;
 use URI;
 use URI::Escape;
 
-our $VERSION = 0.31;
+our $VERSION = 0.32;
 
 const my %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
